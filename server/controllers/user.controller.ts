@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express'
 import { getLogger } from 'log4js'
 import IBaseController from '../interfaces/IBaseController.Interfaces'
 import User from '../models/User'
-import Member from '../models/Member'
 
 const logger = getLogger("user.controller")
 
@@ -30,17 +29,17 @@ class UserController implements IBaseController {
          //       res.json({ message: "success", result: result, data: data })
          //    })
          // })
-         const user: any = await User.findByPk(1);
-         // const user: any = await User.findOne({ where: { id: 1 } });
-         if (user) {
-            console.log('Synchronous', user)
-            res.json({ data: user })
-         } else {
-            console.log('Synchronous Not Found')
-         }
+
+         const user = await User.findByPk(2, {
+            include: [User.associations.members],
+            rejectOnEmpty: true, // Specifying true here removes `null` from the return type!
+         });
+         console.log('user', user)
+         res.json({ message: "success", data: user })
 
       } catch (err) {
-         logger.error('Catch error')
+         logger.error(err.message)
+         res.status(500).json({ message: err.message });
       }
    }
 }
