@@ -2,8 +2,8 @@ import express, { Application, Request, Response } from 'express'
 import { configure, getLogger } from 'log4js'
 import { sequelize, logConfig } from "./config";
 import { Environment } from './environment'
-const logger = getLogger("app")
 
+const logger = getLogger("app")
 class App {
    public app: Application
    public port: number | string
