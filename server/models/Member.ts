@@ -2,19 +2,23 @@ import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../config'
 
 // These are all the attributes in the Member model
-interface MemberAttributes {
+export interface MemberAttributes {
    id: number
-   userId: number
-   parentId: number
-   depth: number
+   userId: number | null
+   parentId: number | null
+   sponsorId: string | null
+   level: number | null
    status: number | null
+   createdAt?: string | Date
+   updatedAt?: string | Date
 }
 
 class Member extends Model implements MemberAttributes {
    public id!: number // Note that the `null assertion` `!` is required in strict mode.
-   public userId!: number
-   public parentId!: number
-   public depth!: number
+   public userId!: number | null
+   public parentId!: number | null
+   public sponsorId!: string | null
+   public level!: number | null
    public status!: number | null;
    // timestamps!
    public readonly createdAt!: Date;
@@ -28,8 +32,9 @@ Member.init({
       primaryKey: true
    },
    userId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-   parentId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-   depth: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
+   parentId: { type: DataTypes.INTEGER, allowNull: false },
+   sponsorId: { type: DataTypes.STRING(128), allowNull: false },
+   level: { type: DataTypes.INTEGER, allowNull: false },
    status: { type: new DataTypes.INTEGER, defaultValue: 1 }
 }, {
    tableName: "members",

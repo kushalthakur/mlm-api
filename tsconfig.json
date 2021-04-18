@@ -10,6 +10,7 @@
   },
   "include": [
     "server/**/*",
-    "@types"
+    "@types",
+    "custom.d.ts"
   ]
 }

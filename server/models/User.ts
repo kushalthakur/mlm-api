@@ -1,16 +1,19 @@
-import { Model, DataTypes, Association } from 'sequelize'
+import { Model, DataTypes } from 'sequelize'
 import { sequelize } from '../config'
 import Member from './Member';
 
 // These are all the attributes in the User model
-interface UserAttributes {
+export interface UserAttributes {
    id: number;
    name: string;
    email: string | null;
    phone: string | null;
    password: string | null;
+   founderClubMember: number | null;
    role: string | null;
    status: number | null;
+   createdAt?: string | Date;
+   updatedAt?: string | Date;
 }
 
 class User extends Model implements UserAttributes {
@@ -19,6 +22,7 @@ class User extends Model implements UserAttributes {
    public email!: string | null; // for nullable fields
    public phone!: string | null;
    public password!: string | null;
+   public founderClubMember!: number | null
    public role!: string | null;
    public status!: number | null;
    // timestamps!
@@ -32,11 +36,12 @@ User.init({
       autoIncrement: true,
       primaryKey: true
    },
-   name: { type: new DataTypes.STRING(128), allowNull: true },
+   name: { type: new DataTypes.STRING(128), allowNull: false },
    email: { type: new DataTypes.STRING(128), allowNull: true },
    phone: { type: new DataTypes.STRING(56), allowNull: true },
    password: { type: new DataTypes.STRING(128), allowNull: true },
-   role: { type: new DataTypes.STRING(56), allowNull: true },
+   founderClubMember: { type: new DataTypes.INTEGER, defaultValue: 0 },
+   role: { type: new DataTypes.STRING(56), allowNull: false },
    status: { type: new DataTypes.INTEGER, defaultValue: 1 }
 }, {
    tableName: "users",

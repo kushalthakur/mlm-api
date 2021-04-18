@@ -1,18 +1,22 @@
-export enum USER_STATUS {
+export enum STATUS {
+   DELETED = 0,
    ACTIVE = 1,
-   INACTIVE = 2,
-   DELETED = 0
+   INACTIVE = 2
+}
+
+export enum FC_MEMBER {
+   NO = 0,
+   YES = 1
 }
 
 export enum USER_ROLE {
    ADMIN = 'ADMIN',
-   FCM = 'FOUNDER_CLUB_MEMBER',
-   NONE_FCM = 'NONE_FCM'
+   MEMBER = 'MEMBER'
 }
 
-export enum STATUS {
+export enum OTHER_STATUS {
    ACTIVE = 'ACTIVE',
+   DELETED = 'DELETED',
    INACTIVE = 'INACTIVE',
-   REPLACED = 'REPLACED',
-   DELETED = 'DELETED'
+   REPLACED = 'REPLACED'
 }
