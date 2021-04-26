@@ -6,8 +6,8 @@ export interface MemberAttributes {
    id: number
    userId: number | null
    parentId: number | null
-   sponsorId: string | null
    level: number | null
+   sponsorId: string | null
    status: number | null
    createdAt?: string | Date
    updatedAt?: string | Date
@@ -17,8 +17,8 @@ class Member extends Model implements MemberAttributes {
    public id!: number // Note that the `null assertion` `!` is required in strict mode.
    public userId!: number | null
    public parentId!: number | null
-   public sponsorId!: string | null
    public level!: number | null
+   public sponsorId!: string | null
    public status!: number | null;
    // timestamps!
    public readonly createdAt!: Date;
@@ -33,8 +33,8 @@ Member.init({
    },
    userId: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
    parentId: { type: DataTypes.INTEGER, allowNull: false },
-   sponsorId: { type: DataTypes.STRING(128), allowNull: false },
    level: { type: DataTypes.INTEGER, allowNull: false },
+   sponsorId: { type: DataTypes.STRING(128), allowNull: true },
    status: { type: new DataTypes.INTEGER, defaultValue: 1 }
 }, {
    tableName: "members",

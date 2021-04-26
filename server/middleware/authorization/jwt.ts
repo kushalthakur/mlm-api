@@ -29,7 +29,8 @@ let signOptions: SignOptions = {
 export const authToken = (user: UserAttributes) => {
    let payload: any = {};
    payload.id = user && user.id;
-   payload.name = user && user.name;
+   payload.firstName = user && user.firstName;
+   payload.lastName = user && user.lastName;
    payload.email = user && user.email;
    payload.phone = user && user.phone;
    payload.role = user && user.role;

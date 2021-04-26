@@ -5,7 +5,8 @@ import Member from './Member';
 // These are all the attributes in the User model
 export interface UserAttributes {
    id: number;
-   name: string;
+   firstName: string;
+   lastName: string;
    email: string | null;
    phone: string | null;
    password: string | null;
@@ -18,7 +19,8 @@ export interface UserAttributes {
 
 class User extends Model implements UserAttributes {
    public id!: number; // Note that the `null assertion` `!` is required in strict mode.
-   public name!: string;
+   public firstName!: string;
+   public lastName!: string;
    public email!: string | null; // for nullable fields
    public phone!: string | null;
    public password!: string | null;
@@ -36,7 +38,8 @@ User.init({
       autoIncrement: true,
       primaryKey: true
    },
-   name: { type: new DataTypes.STRING(128), allowNull: false },
+   firstName: { type: new DataTypes.STRING(128), allowNull: false },
+   lastName: { type: new DataTypes.STRING(128), allowNull: false },
    email: { type: new DataTypes.STRING(128), allowNull: true },
    phone: { type: new DataTypes.STRING(56), allowNull: true },
    password: { type: new DataTypes.STRING(128), allowNull: true },

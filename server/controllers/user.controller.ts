@@ -25,14 +25,14 @@ class UserController implements IBaseController {
                   bcryptJs(req.body.password, user.password, (err: any, isMatch: boolean) => {
                      if (isMatch) {
                         const token: any = authToken(user)
-                        res.json({ message: "Logged In successfully", data: user, token: token })
+                        res.status(200).json({ message: "Logged In successfully", data: user, token: token })
                         logger.info('Logged In successfully');
                      } else {
-                        res.status(422).json({ message: "You have entered an invalid email or password" })
+                        res.status(404).json({ message: "You have entered an invalid email or password" })
                      }
                   })
                } else {
-                  res.status(422).json({ message: "You have entered an invalid email or password" })
+                  res.status(404).json({ message: "You have entered an invalid email or password" })
                }
             })
          } else {

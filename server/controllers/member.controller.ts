@@ -1,10 +1,10 @@
 import express, { Request, Response } from 'express'
 import { getLogger } from 'log4js'
-import { STATUS } from '../constants'
+import { STATUS, USER_ROLE } from '../constants'
 import IBaseController from '../interfaces/IBaseController.Interfaces'
 import { authorization } from '../middleware/authorization'
 import Member from '../models/Member'
-// import User from '../models/User'
+import User from '../models/User'
 
 const logger = getLogger("member.controller")
 
@@ -18,11 +18,11 @@ class MemberController implements IBaseController {
    }
    getMembers = async (req: Request, res: Response) => {
       try {
-         Member.findAll({ where: { status: STATUS.ACTIVE } })
-            .then((member: any) => {
-               res.json({ data: member })
-            })
-
+         User.findAll({
+            where: { status: STATUS.ACTIVE }, include: [User.associations.members]
+         }).then((member: any) => {
+            res.json({ data: member })
+         })
       } catch (err) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
@@ -31,7 +31,50 @@ class MemberController implements IBaseController {
 
    addMember = async (req: Request, res: Response) => {
       try {
-         // const code = Math.floor(10000000 + Math.random() * 90000000)
+         // const user = new User()
+         // user.firstName = "Kushal"
+         // user.lastName = "Thakur"
+         // user.email = "kushalkumarthakur52@gmail.com"
+         // user.password = "$2a$10$pChRV1CgHQ.gIEnKCUy5L.HBauGKYicnHZ6guYW5p9scxezUjjIC2"
+         // user.phone = "+91-9816227689"
+         // user.founderClubMember = 0
+         // user.role = "ADMIN"
+         // await user.save()
+         // let member = new Member()
+         // member.userId = user.id
+         // member.parentId = 0
+         // member.level = 0
+         // member.sponsorId = "KKT99142"
+         // await member.save()
+         // res.json({ message: "Member created successfully" })
+
+         if (req.body.firstName !== "" && req.body.lastName !== "" && req.body.email !== "" && req.body.sponsorId !== "" && req.body.founderClubMember !== "") {
+            Member.findOne({ where: { sponsorId: req.body.sponsorId, status: STATUS.ACTIVE } })
+               .then(async (result: any) => {
+                  if (result) {
+                     const sponsorId = Math.floor(10000000 + Math.random() * 90000000)
+                     const user = new User()
+                     user.firstName = req.body.firstName
+                     user.lastName = req.body.lastName
+                     user.email = req.body.email
+                     user.phone = `+91-${req.body.phone}`
+                     user.founderClubMember = req.body.founderClubMember
+                     user.role = USER_ROLE.MEMBER
+                     await user.save()
+                     let member = new Member()
+                     member.userId = user.id
+                     member.parentId = result.id
+                     member.sponsorId = sponsorId.toString()
+                     member.level = result.level + 1
+                     await member.save()
+                     res.json({ message: "Member created successfully" })
+                  } else {
+                     res.status(400).json({ message: "Member not found" })
+                  }
+               })
+         } else {
+            res.status(422).json({ message: "All fields are required" })
+         }
       } catch (err) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
