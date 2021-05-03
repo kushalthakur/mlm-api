@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { getLogger } from 'log4js'
+import { each } from 'lodash'
 import { STATUS, USER_ROLE } from '../constants'
 import IBaseController from '../interfaces/IBaseController.Interfaces'
 import { authorization } from '../middleware/authorization'
@@ -15,13 +16,29 @@ class MemberController implements IBaseController {
    }
    public initRoutes() {
       this.router.route('/members').all(authorization).get(this.getMembers).post(this.addMember).put(this.updateMember).delete(this.deleteMember)
+      this.router.route('/sponsors').all(authorization).get(this.getSponsorIds)
    }
    getMembers = async (req: Request, res: Response) => {
       try {
+         const data: Array<any> = []
          User.findAll({
             where: { status: STATUS.ACTIVE }, include: [User.associations.members]
-         }).then((member: any) => {
-            res.json({ data: member })
+         }).then((members: any) => {
+            each(members, (user: any) => {
+               data.push({
+                  id: user && user.id,
+                  firstName: user && user.firstName,
+                  lastName: user && user.lastName,
+                  email: user && user.email,
+                  phone: user && user.phone,
+                  founderClubMember: user && user.founderClubMember,
+                  sponsorId: user.members[0] && user.members[0].sponsorId,
+                  level: user.members[0] && user.members[0].level,
+                  status: user && user.status,
+                  createdAt: user && user.createdAt
+               })
+            })
+            res.json({ message: "Member fetched successfully", data: data })
          })
       } catch (err) {
          logger.error(err.message);
@@ -93,6 +110,17 @@ class MemberController implements IBaseController {
    deleteMember = async (req: Request, res: Response) => {
       try {
 
+      } catch (err) {
+         logger.error(err.message);
+         res.status(500).json({ message: err.message });
+      }
+   }
+
+   getSponsorIds = async (req: Request, res: Response) => {
+      try {
+         Member.findAll({ where: { status: STATUS.ACTIVE }, attributes: ['id', 'sponsorId'] }).then((data: any) => {
+            res.status(200).json({ message: "Sponsor id fetched successfully", data: data })
+         })
       } catch (err) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
