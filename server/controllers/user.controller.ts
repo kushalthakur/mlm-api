@@ -59,7 +59,6 @@ class UserController implements IBaseController {
          //    email: "ajay@gmail.com",
          //    password: "1234567",
          //    role: "MEMBER",
-         //    founderClubMember: 0
          // }).then((result: any) => {
          //    Member.create({
          //       userId: result.id,

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import nodeMailer from 'nodemailer'
+import { Validator } from 'node-input-validator'
 import { Environment } from '../environment'
 
 // 
@@ -35,7 +36,24 @@ export const sendMail = async () => {
       }
    })
 }
-
+// validation
+export const Validation = (keys: Array<any>, body: object) => {
+   let obj: any = {}
+   keys.forEach((key: any) => {
+      if (key === 'email') {
+         obj['email'] = 'required|email'
+      } else if (key === 'sponsorId') {
+         obj['sponsorId'] = 'required|minLength:8|maxLength:8'
+      } else if (key === 'phone') {
+         obj['phone'] = 'integer|minLength:10|maxLength:10'
+      } else if (key === 'userId') {
+         obj['userId'] = 'required|integer'
+      } else {
+         obj[key] = 'required'
+      }
+   })
+   return new Validator(body, obj)
+}
 
 
 

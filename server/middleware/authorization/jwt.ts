@@ -34,7 +34,6 @@ export const authToken = (user: UserAttributes) => {
    payload.email = user && user.email;
    payload.phone = user && user.phone;
    payload.role = user && user.role;
-   payload.founderClubMember = user && user.founderClubMember;
    payload.status = user && user.status;
    payload.createdAt = user && user.createdAt;
    payload.updatedAt = user && user.updatedAt;

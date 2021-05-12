@@ -20,23 +20,28 @@ class TreeController implements IBaseController {
    getTree = async (req: Request, res: Response) => {
       try {
          let members: Array<any> = []
-         const users: any = await User.findAll({ where: { status: STATUS.ACTIVE }, include: [User.associations.members] })
+         const users: any = await User.findAll({
+            where: { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }] },
+            include: [User.associations.members]
+         })
          each(users, (user: any) => {
+            let fname = user && user.firstName !== null ? user.firstName : ''
+            let lname = user && user.lastName !== null ? user.lastName : ''
             members.push({
-               id: user.members[0] && user.members[0].id,
-               name: user && user.firstName + ' ' + user.lastName,
-               parentId: user.members[0] && user.members[0].parentId,
+               id: user && user.members[0] && user.members[0].id,
+               name: fname + ' ' + lname,
+               parentId: user && user.members[0] && user.members[0].parentId,
                attributes: {
-                  email: user && user.email,
-                  founderClubMember: user && user.founderClubMember,
-                  sponsorId: user.members[0] && user.members[0].sponsorId,
-                  level: user.members[0] && user.members[0].level,
+                  username: user && user.username,
+                  sponsorId: user && user.members[0] && user.members[0].sponsorId,
+                  level: user && user.members[0] && user.members[0].level,
                   status: user && user.status
                },
                children: null
             })
          })
-         const tree = makeTree(members)
+         const tree: any = makeTree(members)
+         removeEmptyChildren(tree && tree[0] && tree[0].children)
          res.status(200).json({ message: "Tree get successfully", data: tree })
       } catch (err) {
          logger.error(err.message);
@@ -62,4 +67,15 @@ export const makeTree = (data: any) => {
       }
    }
    return roots
+}
+// remove empty children array from above makeTree function
+// recursive function
+export const removeEmptyChildren = (children: any) => {
+   children.forEach((item: any) => {
+      if (item.children.length === 0)
+         delete item.children
+      if (item.children)
+         removeEmptyChildren(item.children)
+   })
+   return children
 }
