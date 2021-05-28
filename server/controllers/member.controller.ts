@@ -19,17 +19,22 @@ class MemberController implements IBaseController {
    }
    public initRoutes() {
       this.router.route('/members').all(authorization).get(this.getMembers).post(this.addMember).put(this.updateMember).delete(this.deleteMember)
+      this.router.get('/member/:id', authorization, this.getMemberById)
       this.router.route('/sponsors').all(authorization).get(this.getSponsorIds)
    }
    getMembers = async (req: Request, res: Response) => {
       try {
          const data: Array<any> = []
-         User.findAll({
-            where: { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }], id: { [Op.ne]: 1 } },
-            order: [['id', 'DESC']],
+         const query = queryParameters(req.query)
+         const condition = queryStructure(req.query)
+         User.findAndCountAll({
+            limit: query.limit,
+            offset: query.page,
+            where: condition, // { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }], id: { [Op.ne]: 1 } },
+            order: [[query.sort, query.order]],
             include: [User.associations.members]
          }).then((members: any) => {
-            each(members, (user: any) => {
+            each(members && members.rows, (user: any) => {
                data.push({
                   id: user && user.id,
                   firstName: user && user.firstName,
@@ -45,7 +50,35 @@ class MemberController implements IBaseController {
                   status: user && user.status === 1 ? 'ACTIVE' : user.status === 2 ? 'INACTIVE' : ''
                })
             })
-            res.json({ message: "Member fetched successfully", data: data })
+            res.json({ error: false, message: "Member fetched successfully", data: data, totalCount: members.count })
+         })
+      } catch (err) {
+         logger.error(err.message);
+         res.status(500).json({ message: err.message });
+      }
+   }
+
+   getMemberById = async (req: Request, res: Response) => {
+      try {
+         User.findOne({
+            where: { id: req.params.id, [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }] },
+            include: [User.associations.members]
+         }).then((user: any) => {
+            let result = {
+               id: user && user.id,
+               firstName: user && user.firstName,
+               lastName: user && user.lastName,
+               username: user && user.username,
+               email: user && user.email,
+               phone: user && user.phone,
+               address: user && user.address,
+               age: user && user.age,
+               dateOfBirth: user && user.dateOfBirth,
+               sponsorId: user.members[0] && user.members[0].sponsorId,
+               level: user.members[0] && user.members[0].level,
+               //    status: user && user.status === 1 ? 'ACTIVE' : user.status === 2 ? 'INACTIVE' : ''
+            }
+            res.json({ error: false, message: "Member fetched successfully", data: result })
          })
       } catch (err) {
          logger.error(err.message);
@@ -83,15 +116,17 @@ class MemberController implements IBaseController {
                Member.findOne({ where: { sponsorId: req.body.sponsorId, status: STATUS.ACTIVE } })
                   .then(async (result: any) => {
                      if (result) {
-                        let obj: any = {}
+                        let arr: any = []
                         if (req.body.email) {
-                           obj['email'] = req.body.email
-                        } else if (req.body.phone) {
-                           obj['phone'] = req.body.phone
-                        } else {
-                           obj['username'] = req.body.username
+                           arr.push({ email: req.body.email })
                         }
-                        const checkUsernameEmailPhone = await User.findOne({ where: { [Op.or]: [obj] }, attributes: ['id', 'username', 'email', 'phone'] })
+                        if (req.body.phone) {
+                           arr.push({ phone: req.body.phone })
+                        }
+                        if (req.body.username) {
+                           arr.push({ username: req.body.username })
+                        }
+                        const checkUsernameEmailPhone: any = await User.findOne({ where: { [Op.or]: arr }, attributes: ['id', 'username', 'email', 'phone'] })
                         if (!checkUsernameEmailPhone) {
                            const sponsorId = Math.floor(10000000 + Math.random() * 90000000)
                            let addNew = { ...req.body, role: USER_ROLE.MEMBER }
@@ -119,7 +154,14 @@ class MemberController implements IBaseController {
                            res.json({ error: false, message: "Member created successfully", data: data })
                            logger.info("Member created successfully")
                         } else {
-                           res.status(400).json({ error: true, message: "Email or phone or username already exists" })
+                           let value = Object.values(checkUsernameEmailPhone.dataValues)
+                           if (value.includes(req.body.username)) {
+                              res.status(400).json({ error: true, message: "Username already exists" })
+                           } else if (value.includes(req.body.email)) {
+                              res.status(400).json({ error: true, message: "Email already exists" })
+                           } else if (value.includes(req.body.phone)) {
+                              res.status(400).json({ error: true, message: "Phone already exists" })
+                           }
                         }
                      } else {
                         res.status(400).json({ error: true, message: "Member not found" })
@@ -135,26 +177,29 @@ class MemberController implements IBaseController {
 
    updateMember = async (req: Request, res: Response) => {
       try {
-         const v = Validation(['userId', 'firstName', 'username', 'phone'], req.body)
+         const v = Validation(['id', 'firstName', 'username', 'phone'], req.body)
          v.check().then((matched) => {
             if (!matched) {
                res.status(422).send({ message: "All fields are required", error: v.errors });
             } else {
-               User.findOne({ where: { id: req.body.userId, status: STATUS.ACTIVE }, include: [User.associations.members] })
+               User.findOne({ where: { id: req.body.id, status: STATUS.ACTIVE }, include: [User.associations.members] })
                   .then(async (user: any) => {
                      if (user) {
-                        let obj: any = {}
+                        let arr: any = []
                         if (req.body.email) {
-                           obj['email'] = req.body.email
-                        } else if (req.body.phone) {
-                           obj['phone'] = req.body.phone
-                        } else {
-                           obj['username'] = req.body.username
+                           arr.push({ email: req.body.email })
                         }
-                        const checkUsernameEmailPhone = await User.findOne({
-                           where: { id: { [Op.ne]: user.id }, [Op.or]: [obj] }, attributes: ['id', 'username', 'email', 'phone']
+                        if (req.body.phone) {
+                           arr.push({ phone: req.body.phone })
+                        }
+                        if (req.body.username) {
+                           arr.push({ username: req.body.username })
+                        }
+                        const checkUsernameEmailPhone: any = await User.findOne({
+                           where: { id: { [Op.ne]: user.id }, [Op.or]: arr }, attributes: ['username', 'email', 'phone']
                         })
                         if (!checkUsernameEmailPhone) {
+                           delete req.body.id
                            const data = await user.update(req.body)
                            let result = {
                               id: data && data.id,
@@ -170,13 +215,20 @@ class MemberController implements IBaseController {
                               level: data && data.members && data.members[0].level,
                               sponsorId: data && data.members && data.members[0].sponsorId
                            }
-                           res.json({ message: "Member updated successfully", data: result })
+                           res.json({ error: false, message: "Member updated successfully", data: result })
                            logger.info("Member updated successfully")
                         } else {
-                           res.status(400).json({ message: "Email or phone or username already exists" })
+                           let value = Object.values(checkUsernameEmailPhone.dataValues)
+                           if (value.includes(req.body.username)) {
+                              res.status(400).json({ error: true, message: "Username already exists" })
+                           } else if (value.includes(req.body.email)) {
+                              res.status(400).json({ error: true, message: "Email already exists" })
+                           } else if (value.includes(req.body.phone)) {
+                              res.status(400).json({ error: true, message: "Phone already exists" })
+                           }
                         }
                      } else {
-                        res.status(400).json({ message: "Member not found" })
+                        res.status(400).json({ error: true, message: "Member not found" })
                      }
                   })
             }
@@ -202,7 +254,7 @@ class MemberController implements IBaseController {
 
    getSponsorIds = async (req: Request, res: Response) => {
       try {
-         Member.findAll({ where: { status: STATUS.ACTIVE }, attributes: ['id', 'sponsorId'] }).then((data: any) => {
+         Member.findAll({ where: { status: STATUS.ACTIVE }, attributes: ['sponsorId'] }).then((data: any) => {
             res.status(200).json({ message: "Sponsor id fetched successfully", data: data })
          })
       } catch (err) {
@@ -213,3 +265,40 @@ class MemberController implements IBaseController {
 }
 
 export default MemberController
+
+
+export const queryParameters = (params: any = {}) => {
+   let query: any = {}
+   if (params && (typeof params.limit !== 'undefined')) {
+      query['limit'] = parseInt(params.limit)
+   } else {
+      query['limit'] = 10
+   }
+   if (params && (typeof params.page !== 'undefined')) {
+      query['page'] = parseInt(params.page) * query.limit
+   }
+   if (params && (typeof params.sort !== 'undefined')) {
+      query['sort'] = params.sort
+   } else {
+      query['sort'] = 'id'
+   }
+   if (params && (typeof params.order !== 'undefined')) {
+      query['order'] = params.order
+   } else {
+      query['order'] = 'desc'
+   }
+   return query
+}
+
+export const queryStructure = (params: any) => {
+   let query: any = {}
+   if (params && params.firstName) {
+      query = {
+         firstName: { [Op.like]: `%${params.firstName}%` },
+         [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }], id: { [Op.ne]: 1 }
+      }
+   } else {
+      query = { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }], id: { [Op.ne]: 1 } }
+   }
+   return query
+}

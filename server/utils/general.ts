@@ -46,8 +46,8 @@ export const Validation = (keys: Array<any>, body: object) => {
          obj['sponsorId'] = 'required|minLength:8|maxLength:8'
       } else if (key === 'phone') {
          obj['phone'] = 'integer|minLength:10|maxLength:10'
-      } else if (key === 'userId') {
-         obj['userId'] = 'required|integer'
+      } else if (key === 'id') {
+         obj['id'] = 'required|integer'
       } else {
          obj[key] = 'required'
       }
