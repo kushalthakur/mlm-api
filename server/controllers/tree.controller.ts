@@ -35,7 +35,7 @@ class TreeController implements IBaseController {
                   username: user && user.username,
                   sponsorId: user && user.members[0] && user.members[0].sponsorId,
                   level: user && user.members[0] && user.members[0].level,
-                  status: user && user.status
+                  status: user && user.status === 1 ? 'ACTIVE' : user.status === 2 ? 'INACTIVE' : ''
                },
                children: null
             })

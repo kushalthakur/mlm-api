@@ -4,11 +4,6 @@ export enum STATUS {
    INACTIVE = 2
 }
 
-export enum FC_MEMBER {
-   NO = 0,
-   YES = 1
-}
-
 export enum USER_ROLE {
    ADMIN = 'ADMIN',
    MEMBER = 'MEMBER'

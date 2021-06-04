@@ -15,7 +15,7 @@ class UserController implements IBaseController {
    }
    public initRoutes() {
       this.router.route('/login').post(this.login)
-      this.router.route('/forgot/password').get(this.forgotPasswordUsingEmail).post(this.forgotPassword)
+      this.router.route('/forgot/password').post(this.forgotPasswordUsingEmail).post(this.forgotPassword)
    }
    login = async (req: Request, res: Response) => {
       try {
@@ -46,6 +46,9 @@ class UserController implements IBaseController {
    forgotPasswordUsingEmail = async (req: Request, res: Response) => {
       try {
          const mail: any = sendMail()
+         if (mail) {
+            console.log('success', mail)
+         }
       } catch (err) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });

@@ -18,8 +18,8 @@ class MemberController implements IBaseController {
       this.initRoutes()
    }
    public initRoutes() {
-      this.router.route('/members').all(authorization).get(this.getMembers).post(this.addMember).put(this.updateMember).delete(this.deleteMember)
-      this.router.get('/member/:id', authorization, this.getMemberById)
+      this.router.route('/members').all(authorization).get(this.getMembers).post(this.addMember).put(this.updateMember)
+      this.router.route('/member/:id').all(authorization).get(this.getMemberById).delete(this.deleteMemberById)
       this.router.route('/sponsors').all(authorization).get(this.getSponsorIds)
    }
    getMembers = async (req: Request, res: Response) => {
@@ -113,7 +113,7 @@ class MemberController implements IBaseController {
             if (!matched) {
                res.status(422).send({ message: "All fields are required", error: v.errors });
             } else {
-               Member.findOne({ where: { sponsorId: req.body.sponsorId, status: STATUS.ACTIVE } })
+               Member.findOne({ where: { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }], sponsorId: req.body.sponsorId } })
                   .then(async (result: any) => {
                      if (result) {
                         let arr: any = []
@@ -182,7 +182,7 @@ class MemberController implements IBaseController {
             if (!matched) {
                res.status(422).send({ message: "All fields are required", error: v.errors });
             } else {
-               User.findOne({ where: { id: req.body.id, status: STATUS.ACTIVE }, include: [User.associations.members] })
+               User.findOne({ where: { id: req.body.id, [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }] }, include: [User.associations.members] })
                   .then(async (user: any) => {
                      if (user) {
                         let arr: any = []
@@ -239,13 +239,35 @@ class MemberController implements IBaseController {
       }
    }
 
-   deleteMember = async (req: Request, res: Response) => {
+   deleteMemberById = async (req: Request, res: Response) => {
       try {
-         User.update({ status: STATUS.INACTIVE }, { where: { id: req.query.userId } })
-            .then((data: any) => {
-               Member.update({ status: STATUS.INACTIVE }, { where: { userId: req.query.userId } })
-               res.status(200).json({ message: "Member has been inactive successfully", data: data })
-            })
+         User.findOne({
+            where: { status: STATUS.ACTIVE, id: req.params.id },
+            include: [User.associations.members]
+         }).then(async (user: any) => {
+            if (user.id === 1) {
+               res.status(400).json({ error: true, message: "Wrong user Id" })
+            } else {
+               user.update({ status: STATUS.INACTIVE })
+               Member.update({ status: STATUS.INACTIVE }, { where: { userId: user.id } })
+               let result = {
+                  id: user && user.id,
+                  firstName: user && user.firstName,
+                  lastName: user && user.lastName,
+                  username: user && user.username,
+                  email: user && user.email,
+                  address: user && user.address,
+                  age: user && user.age,
+                  phone: user && user.phone,
+                  dateOfBirth: user && user.dateOfBirth && moment(user.dateOfBirth).format("MMMM Do YYYY"),
+                  status: user && user.status === 1 ? 'ACTIVE' : user.status === 2 ? 'INACTIVE' : '',
+                  level: user && user.members && user.members[0].level,
+                  sponsorId: user && user.members && user.members[0].sponsorId
+               }
+               res.status(200).json({ error: false, message: "Member has been inactive successfully", data: result })
+               logger.info("Member has been inactive successfully")
+            }
+         })
       } catch (err) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
@@ -254,7 +276,7 @@ class MemberController implements IBaseController {
 
    getSponsorIds = async (req: Request, res: Response) => {
       try {
-         Member.findAll({ where: { status: STATUS.ACTIVE }, attributes: ['sponsorId'] }).then((data: any) => {
+         Member.findAll({ where: { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }] }, attributes: ['sponsorId'] }).then((data: any) => {
             res.status(200).json({ message: "Sponsor id fetched successfully", data: data })
          })
       } catch (err) {
