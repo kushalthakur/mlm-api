@@ -52,7 +52,7 @@ class MemberController implements IBaseController {
             })
             res.json({ error: false, message: "Member fetched successfully", data: data, totalCount: members.count })
          })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -80,7 +80,7 @@ class MemberController implements IBaseController {
             }
             res.json({ error: false, message: "Member fetched successfully", data: result })
          })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -169,7 +169,7 @@ class MemberController implements IBaseController {
                   })
             }
          })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -233,7 +233,7 @@ class MemberController implements IBaseController {
                   })
             }
          })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -268,7 +268,7 @@ class MemberController implements IBaseController {
                logger.info("Member has been inactive successfully")
             }
          })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -279,7 +279,7 @@ class MemberController implements IBaseController {
          Member.findAll({ where: { [Op.or]: [{ status: STATUS.ACTIVE }, { status: STATUS.INACTIVE }] }, attributes: ['sponsorId'] }).then((data: any) => {
             res.status(200).json({ message: "Sponsor id fetched successfully", data: data })
          })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }

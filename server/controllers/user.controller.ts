@@ -38,7 +38,7 @@ class UserController implements IBaseController {
          } else {
             res.status(422).json({ message: "Email and password fields are required" })
          }
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -49,7 +49,7 @@ class UserController implements IBaseController {
          if (mail) {
             console.log('success', mail)
          }
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }
@@ -81,7 +81,7 @@ class UserController implements IBaseController {
          // } else {
          //    res.json({ message: "Not found" })
          // }
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }

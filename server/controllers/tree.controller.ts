@@ -43,7 +43,7 @@ class TreeController implements IBaseController {
          const tree: any = makeTree(members)
          removeEmptyChildren(tree && tree[0] && tree[0].children)
          res.status(200).json({ message: "Tree get successfully", data: tree })
-      } catch (err) {
+      } catch (err: any) {
          logger.error(err.message);
          res.status(500).json({ message: err.message });
       }

@@ -64,7 +64,7 @@ export const authorization = (req: Request, res: Response, next: NextFunction) =
          res.status(404).json({ error: true, message: "Bearer your_token." });
          logger.error("Bearer your_token");
       }
-   } catch (err) {
+   } catch (err: any) {
       res.status(403).json({ error: true, message: err.message });
       logger.error(err.message);
    }

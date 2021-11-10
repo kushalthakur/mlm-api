@@ -12,7 +12,7 @@ class HistoryController implements IBaseController {
    history = async (req: Request, res: Response) => {
       try {
 
-      } catch (err) {
+      } catch (err: any) {
 
       }
    }
