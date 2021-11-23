@@ -49,7 +49,7 @@ var verifyOptions: VerifyOptions = {
    maxAge: exp,
    algorithms: ["RS256"]
 };
-export const authorization = (req: Request, res: Response, next: NextFunction) => {
+export const authorization = (req: any, res: Response, next: NextFunction) => {
    try {
       let token: Array<string> | undefined = req.header('Authorization')?.split(" ", 2)
       if (token && token[0] === 'Bearer') {

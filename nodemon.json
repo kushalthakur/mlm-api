@@ -1,6 +1,7 @@
 {
    "watch": [
-      "build"
+      "server"
    ],
-   "ext": "js"
+   "ext": ".ts,.js",
+   "exec": "ts-node ./server/server.ts"
 }
