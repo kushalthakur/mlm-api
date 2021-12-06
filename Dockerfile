@@ -10,6 +10,7 @@ RUN npm install
 COPY . /app
 # run build
 RUN npm run build
+# PORT
+EXPOSE 3005
 # start app
-ENTRYPOINT ["npm", "start"]
-EXPOSE 8080
+CMD ["npm", "start"]

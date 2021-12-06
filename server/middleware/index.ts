@@ -7,7 +7,7 @@ export default (app: Application) => {
    app.use(bodyParser.urlencoded({ extended: false }) as RequestHandler);
    app.use(cors({
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
-      allowedHeaders: ['authorization', 'content-type'],
+      allowedHeaders: ['authorization', 'content-type', 'x-auth-token'],
       exposedHeaders: ['Content-Disposition']
    }))
 }

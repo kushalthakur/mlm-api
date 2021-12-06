@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import { getLogger } from 'log4js'
 import fs from 'fs'
 import path from 'path'
@@ -14,35 +14,46 @@ const publicKey: Secret = fs.readFileSync(path.join(process.cwd(), '/server/publ
 let iss = "Kushal Thakur";
 let sub = "kushalkumarthakur52@gmail.com";
 let aud = "http://localhost:3005";
-let exp = Environment.JWT_EXPIRE_TIME;
+let exp = Environment.JWT_TOKEN_EXP_TIME;
 
-let signOptions: SignOptions = {
+export const signOptions: SignOptions = {
    issuer: iss,
    subject: sub,
    audience: aud,
    expiresIn: exp,
    algorithm: "RS256"
 }
-//==================================================================================
-//                      create jwt token
-//==================================================================================
-export const authToken = (user: UserAttributes) => {
+/**
+ * create jwt access token
+ *
+ */
+export const accessToken = (user: UserAttributes, options: SignOptions) => {
    let payload: any = {};
    payload.id = user && user.id;
    payload.firstName = user && user.firstName;
    payload.lastName = user && user.lastName;
    payload.email = user && user.email;
-   payload.phone = user && user.phone;
    payload.role = user && user.role;
    payload.status = user && user.status;
    payload.createdAt = user && user.createdAt;
-   payload.updatedAt = user && user.updatedAt;
-   return jwt.sign(payload, privateKey, signOptions)
+   return jwt.sign(payload, privateKey, options)
 }
-//==================================================================================
-//                      token verification
-//==================================================================================
-var verifyOptions: VerifyOptions = {
+/**
+ * create jwt refresh token
+ * 
+ */
+export const refreshToken = (user: UserAttributes, key: string, options: any) => {
+   let payload: any = {};
+   payload.id = user && user.id;
+   payload.email = user && user.email;
+   payload.createdAt = user && user.createdAt;
+   return jwt.sign(payload, key, options)
+}
+/**
+ * access token verification
+ * 
+*/
+const verifyOptions: VerifyOptions = {
    issuer: iss,
    subject: sub,
    audience: aud,
