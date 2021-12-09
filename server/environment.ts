@@ -10,6 +10,7 @@ export interface IEnvironment {
    DB_NAME: string
    DB_USERNAME: string
    DB_PASSWORD: string
+   DB_PORT: string
    SMTP_HOST: string
    SMTP_USERNAME: string
    SMTP_PASSWORD: string
@@ -24,6 +25,7 @@ export const Environment: IEnvironment = {
    DB_NAME: process.env.DB_NAME! || 'mlm',
    DB_USERNAME: process.env.DB_USERNAME! || 'root',
    DB_PASSWORD: process.env.DB_PASSWORD! || '',
+   DB_PORT: process.env.DB_PORT!,
    SMTP_HOST: process.env.SMTP_HOST! || 'smtp.gmail.com',
    SMTP_USERNAME: process.env.SMTP_USERNAME! || 'kushalkumarthakur52@gmail.com',
    SMTP_PASSWORD: process.env.SMTP_PASSWORD! || 'pass'

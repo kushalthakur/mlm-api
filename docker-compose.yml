@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  nodejs:
+    build:
+      context: .
+    image: mlm-api
+    networks:
+      - frontend
+      - backend
+    env_file: ./.env
+    environment:
+      - MYSQL_HOST=mysql-app
+      - MYSQL_USER=rootuser
+      - MYSQL_PASS=rootpass
+      - MYSQL_DB=$DB_NAME
+    ports:
+      - "3005:3005"
+    container_name: mlm-api
+  mysqldb:
+    image: mysql:5.7
+    networks:
+      - backend
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_USER=rootuser
+      - MYSQL_PASSWORD=rootpass
+      - MYSQL_DATABASE=$DB_NAME
+    container_name: mysql-app
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    depends_on:
+      - mysqldb
+    networks:
+      - backend
+    ports:
+      - "8001:80"
+    env_file:
+      - .env
+    environment:
+      - PMA_HOST=mysql-app
+      - PMA_PORT=$DB_PORT
+    container_name: phpmyadmin
+networks:
+  backend: null
+  frontend: null
