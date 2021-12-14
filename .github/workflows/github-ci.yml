@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{matrix.node-version}}
@@ -21,10 +21,10 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - name: docker build
-        uses: actions/docker/cli@ci-cd-Pipeline
-        with:
-          args: build -t kushalthakur/mlm-api .
+      # - name: docker build
+      #   uses: actions/docker/cli@ci-cd-Pipeline
+      #   with:
+      #     args: build -t kushalthakur/mlm-api .
       - name: docker login
         uses: actions/docker/login@ci-cd-Pipeline
         env:
