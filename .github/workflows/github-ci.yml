@@ -29,6 +29,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          tag_with_ref: true
+          tag_with_sha: true
+          tags: latest
       # - name: docker build
       #   uses: actions/docker/cli@ci-cd-Pipeline
       #   with:
