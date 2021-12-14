@@ -17,9 +17,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm test
-  deploy:
+  docker-image:
     needs: [test-and-build]
-    name: docker hub
+    name: docker image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
