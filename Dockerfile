@@ -3,7 +3,7 @@ FROM node:lts
 # create app directory
 WORKDIR /app
 # copy package file
-COPY package*.json /app
+COPY package.json /app
 # install dependencies
 RUN npm install
 # add app
