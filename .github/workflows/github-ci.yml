@@ -3,8 +3,7 @@ on:
     branches:
       - ci-cd-Pipeline
 jobs:
-  test:
-    name: test-and-build
+  test-and-build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
