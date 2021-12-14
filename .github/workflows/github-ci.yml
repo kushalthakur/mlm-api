@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - develop
+      - ci-cd-Pipeline
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
