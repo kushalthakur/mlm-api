@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2021 at 11:02 AM
+-- Generation Time: Jan 06, 2022 at 10:14 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.4.16
 
@@ -111,7 +111,10 @@ INSERT INTO `members` (`id`, `userId`, `parentId`, `level`, `sponsorId`, `status
 (66, 66, 41, 5, '23859956', 1, '2021-11-12 06:24:56', '2021-11-12 06:24:56'),
 (67, 67, 42, 5, '76340001', 1, '2021-11-12 06:25:01', '2021-11-12 06:25:01'),
 (68, 68, 49, 5, '17739874', 1, '2021-11-12 06:32:07', '2021-11-12 06:32:07'),
-(69, 69, 51, 5, '97369260', 1, '2021-11-12 06:33:09', '2021-11-12 06:33:09');
+(69, 69, 51, 5, '97369260', 1, '2021-11-12 06:33:09', '2021-11-12 06:33:09'),
+(70, 70, 15, 3, '53289381', 2, '2021-12-16 12:03:48', '2021-12-16 12:04:06'),
+(71, 71, 32, 4, '17004768', 1, '2022-01-06 09:06:00', '2022-01-06 09:06:00'),
+(72, 72, 71, 5, '23769439', 1, '2022-01-06 09:07:07', '2022-01-06 09:07:07');
 
 -- --------------------------------------------------------
 
@@ -141,7 +144,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstName`, `lastName`, `username`, `email`, `phone`, `password`, `address`, `age`, `dateOfBirth`, `role`, `status`, `createdAt`, `updatedAt`) VALUES
-(1, 'Kushal', 'Thakur', 'kushalthakur', 'kushalkumarthakur52@gmail.com', '9914287637', '$2a$10$pChRV1CgHQ.gIEnKCUy5L.HBauGKYicnHZ6guYW5p9scxezUjjIC2', 'Village-Lulani, PO Dharer, Tehsil Baijnath, District-Kangra (HP)', 28, '1992-08-20 00:00:00', 'ADMIN', 1, '2021-11-10 16:20:54', '2021-11-10 16:20:54'),
+(1, 'Gasaoon', 'Khatetu', 'Gasaoon', 'kushalkumarthakur52@gmail.com', '9914287637', '$2a$10$pChRV1CgHQ.gIEnKCUy5L.HBauGKYicnHZ6guYW5p9scxezUjjIC2', 'Village-Lulani, PO Dharer, Tehsil Baijnath, District-Kangra (HP)', 28, '1992-08-20 00:00:00', 'ADMIN', 1, '2021-11-10 16:20:54', '2021-11-10 16:20:54'),
 (2, 'Jangi Ram', NULL, 'jangi', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-11-10 16:23:27', '2021-11-10 16:33:14'),
 (3, 'Chaimper', NULL, 'chaimper', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-11-10 16:24:02', '2021-11-10 16:33:11'),
 (4, 'Batlu Ram', NULL, 'batlu', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-11-10 16:24:40', '2021-11-10 16:33:08'),
@@ -161,8 +164,8 @@ INSERT INTO `users` (`id`, `firstName`, `lastName`, `username`, `email`, `phone`
 (18, 'Goda', NULL, 'Goda', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-11-10 16:32:17', '2021-11-10 16:33:20'),
 (19, 'Pinka', NULL, 'pinka', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:37:06', '2021-11-10 16:37:06'),
 (20, 'Kala', NULL, 'kala', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-11-10 16:37:16', '2021-11-10 16:37:29'),
-(21, 'Rohit', NULL, 'rohit', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:38:29', '2021-11-10 16:38:29'),
-(22, 'Unknown', NULL, 'unknown', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:38:44', '2021-11-10 16:38:44'),
+(21, 'Munish', 'Thakur', 'munish', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:38:29', '2022-01-06 09:01:57'),
+(22, 'Satish', 'Thakur', 'satish', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:38:44', '2022-01-06 09:02:33'),
 (23, 'Mahant', NULL, 'mahant', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-11-10 16:39:56', '2021-11-10 16:41:48'),
 (24, 'Heera', NULL, 'heera', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:40:43', '2021-11-10 16:40:43'),
 (25, 'Akshit', NULL, 'akshit', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 16:41:33', '2021-11-10 16:41:33'),
@@ -196,20 +199,23 @@ INSERT INTO `users` (`id`, `firstName`, `lastName`, `username`, `email`, `phone`
 (53, 'Harish', NULL, 'harish', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:00:34', '2021-11-10 17:00:34'),
 (54, 'Purshotam', NULL, 'purshotam', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:01:13', '2021-11-10 17:01:13'),
 (55, 'Parmesh', NULL, 'parmesh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:02:01', '2021-11-10 17:03:14'),
-(56, 'Bobby', NULL, 'bobby', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:04:34', '2021-11-10 17:04:34'),
+(56, 'Bobby', NULL, 'abhishek', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:04:34', '2022-01-06 09:07:52'),
 (57, 'Vikas', 'Thakur', 'vikas', NULL, '9625555173', NULL, NULL, 29, '1992-06-14 18:30:00', 'MEMBER', 1, '2021-11-10 17:06:36', '2021-11-10 17:06:36'),
 (58, 'Vinay', 'Thakur', 'vinay', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:08:52', '2021-11-10 17:08:52'),
 (59, 'Vishal', 'Thakur', 'kaka', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:09:23', '2021-11-10 17:09:23'),
 (60, 'Ritik', 'Thakur', 'ritik', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:09:52', '2021-11-10 17:09:52'),
 (61, 'Aditya', 'Thakur', 'aadi', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:10:28', '2021-11-10 17:10:28'),
 (62, 'Abhi', NULL, 'abhi', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:11:15', '2021-11-10 17:11:15'),
-(63, 'Prince', NULL, 'prince', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:11:46', '2021-11-10 17:11:46'),
-(64, 'Rudransh', NULL, 'rudrr', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:12:01', '2021-11-10 17:12:01'),
-(65, 'Yogesh', NULL, 'yogesh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:23:20', '2021-11-12 06:23:20'),
-(66, 'Unknown', NULL, 'unknown1', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:24:56', '2021-11-12 06:24:56'),
-(67, 'Daksh', NULL, 'daksh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:25:01', '2021-11-12 06:25:01'),
-(68, 'Kartik Thakur', NULL, 'kartik', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:32:07', '2021-11-12 06:32:07'),
-(69, 'Naksh Thakur', NULL, 'naksh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:33:09', '2021-11-12 06:33:09');
+(63, 'Prince', 'Thakur', 'prince', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-10 17:11:46', '2021-12-16 12:06:29'),
+(64, 'Rudransh', 'Thakur', 'rudrr', NULL, NULL, NULL, NULL, 10, '2011-07-02 18:30:00', 'MEMBER', 1, '2021-11-10 17:12:01', '2021-12-16 12:06:42'),
+(65, 'Yogesh', 'Thakur', 'yogesh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:23:20', '2021-12-16 12:05:29'),
+(66, 'Unknown', NULL, 'unknown1', '', NULL, NULL, NULL, 0, '2021-11-28 18:30:00', 'MEMBER', 1, '2021-11-12 06:24:56', '2021-12-02 12:01:41'),
+(67, 'Daksh', 'Thakur', 'daksh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:25:01', '2021-12-16 12:05:16'),
+(68, 'Kartik', 'Thakur', 'kartik', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:32:07', '2021-12-16 12:05:59'),
+(69, 'Naksh', 'Thakur', 'naksh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2021-11-12 06:33:09', '2022-01-06 09:03:14'),
+(70, 'Sher Singh', NULL, 'shersingh', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 2, '2021-12-16 12:03:48', '2021-12-16 12:04:06'),
+(71, 'Chaman', 'Thakur', 'chaman', NULL, NULL, NULL, 'Chamba', 0, NULL, 'MEMBER', 1, '2022-01-06 09:06:00', '2022-01-06 09:06:00'),
+(72, 'Unknown', NULL, 'Unknown2', NULL, NULL, NULL, NULL, 0, NULL, 'MEMBER', 1, '2022-01-06 09:07:07', '2022-01-06 09:07:07');
 
 --
 -- Indexes for dumped tables
@@ -236,13 +242,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `members`
 --
 ALTER TABLE `members`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- Constraints for dumped tables
